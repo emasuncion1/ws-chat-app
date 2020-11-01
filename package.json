@@ -1,0 +1,20 @@
+{
+  "name": "ws-chat-application",
+  "description": "This is a sample chat application that is made using Socket.io",
+  "keywords": ["socket", "chat", "socket.io", "meshnet", "mesh network"],
+  "author": "Eleirold Asuncion <emasuncion.dev@gmail.com> (https://eleiroldasuncion.com)",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
