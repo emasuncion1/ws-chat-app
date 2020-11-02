@@ -8,14 +8,14 @@ body {
 
 .header {
   overflow: hidden;
-  background-color: #6897ec;
+  background-color: #235789;
   padding: 10px 10px;
 }
 
 .header a,
 .header span.title {
   float: left;
-  color: black;
+  color: #F1D302;
   text-align: center;
   padding: 12px;
   text-decoration: none;
@@ -31,11 +31,35 @@ body {
 
 .header a:hover {
   text-decoration: underline;
-  color: #fff;
 }
 
 .header-right {
   float: right;
+}
+
+.server {
+  margin: auto;
+  padding: 10px;
+  border: 3px solid #235789;
+  border-radius: 15px;
+  width: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  justify-self: center;
+  align-content: space-between;
+}
+
+.server .serverBtn {
+  border-radius: 15px;
+  border: 2.5px solid #235789;
+  background-color: #235789;
+  color: #F1D302;
+  margin: 20px;
+  padding: 20px;
 }
 
 @media screen and (max-width: 500px) {
