@@ -9,8 +9,9 @@ let credentials;
 let client;
 const port = process.env.PORT || 8080;
 
-let chatters = [];
-let chat_messages = [];
+let privateChat1 = [];
+let privateChat2 = [];
+let publicChat = [];
 
 app.use(express.static(__dirname + '/public'));
 
@@ -30,15 +31,21 @@ fs.readFile('credentials.json', 'utf-8', (err, data) => {
   client.flushdb();
 
   client.once('ready', () => {
-    client.get('chat_users', (err, reply) => {
+    client.get('server_chat_1', (err, reply) => {
       if (reply) {
-        chatters = JSON.parse(reply);
+        privateChat1 = JSON.parse(reply);
       }
     });
 
-    client.get('chat_app_messages', (err, reply) => {
+    client.get('server_chat_2', (err, reply) => {
       if (reply) {
-        chat_messages = JSON.parse(reply);
+        privateChat2 = JSON.parse(reply);
+      }
+    });
+
+    client.get('public_chat', (err, reply) => {
+      if (reply) {
+        publicChat = JSON.parse(reply);
       }
     });
   });
@@ -53,11 +60,20 @@ privateServer.on('connection', socket => {
   socketNum = socketNum.slice(-1);
   console.log(`${socket.id} connected to server ${socketNum}`);
 
-  socket.broadcast.emit('new user', `User ${socket.id} connected to private server ${socketNum}!`);
+  let msg = {data: socketNum === '1' ? privateChat1 : privateChat2};
 
+  socket.emit('new user', msg);
   socket.join(`privateS${socketNum}`);
 
   socket.on('message', msg => {
+    if (socket.nsp.name === '/private1') {
+      privateChat1.push(msg);
+      client.set('server_chat_1', JSON.stringify(privateChat1));
+    } else {
+      privateChat2.push(msg);
+      client.set('server_chat_2', JSON.stringify(privateChat2));
+    }
+
     io.of(`/private${socketNum}`).in(`privateS${socketNum}`).emit('message', msg);
   });
 
@@ -69,12 +85,19 @@ privateServer.on('connection', socket => {
 
 publicServer.on('connection', socket => {
   console.log(`${socket.id} connected to public server`);
-  socket.broadcast.emit('new user', `User ${socket.id} connected to public server`);
 
+  let msg = {
+    msg: `User ${socket.id} connected to public server`,
+    data: publicChat
+  };
+
+  socket.emit('new user', msg);
   socket.join('publicRoom');
 
   socket.on('message', msg => {
-    console.log(msg);
+    publicChat.push(msg);
+    client.set('public_chat', JSON.stringify(publicChat));
+
     io.of('/public').in('publicRoom').emit('message', msg);
   });
 

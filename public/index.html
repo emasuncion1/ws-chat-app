@@ -4,18 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CMSC 205: Chat Application</title>
+  <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
-  <form action="/publicServer.html" method="GET">
-    <button>Public Server</button>
-  </form>
+  <div class="header">
+    <span class="title">CMSC 205: Chat Application</span>
+  </div>
 
-  <form action="/server1.html" method="GET">
-    <button>Server 1</button>
-  </form>
+  <div class="servers">
+    <form action="/publicServer.html" method="GET">
+      <button class="serverBtn">Public Server</button>
+    </form>
 
-  <form action="/server2.html" method="GET">
-    <button>Server 2</button>
-  </form>
+    <form action="/server1.html" method="GET">
+      <button class="serverBtn">Server 1</button>
+    </form>
+
+    <form action="/server2.html" method="GET">
+      <button class="serverBtn">Server 2</button>
+    </form>
+  </div>
 </body>
 </html>

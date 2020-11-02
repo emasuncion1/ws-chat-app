@@ -4,44 +4,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CMSC 205: Chat Application Private Server 1</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
-    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
-    #messages { margin-bottom: 40px }
-  </style>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+  <div class="header">
+    <span class="title">CMSC 205: Chat Application</span>
+    <div class="header-right">
+      <a href="/">Leave chat</a>
+    </div>
+  </div>
+
   <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+  <form action="">
+    <input id="textbox" autocomplete="off" />
+    <button id="sendBtn">Send</button>
+  </form>
 
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script>
-      $(function () {
-        var socket = io('/private1');
-        $('form').submit(function(e) {
-          e.preventDefault();
-          socket.emit('message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-
-        socket.on('new user', function(user) {
-          $('#messages').append($('<li>').text(user));
-        });
-
-        socket.on('message', function(msg) {
-          $('#messages').append($('<li>').text(msg));
-        });
+  <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var socket = io('/private1');
+      $('#sendBtn').click(function(e) {
+        e.preventDefault();
+        socket.emit('message', $('#textbox').val());
+        $('#textbox').val('');
+        return false;
       });
-    </script>
+
+      socket.on('new user', function(msg) {
+        if (msg.data.length > 0) {
+          for (let i = 0; i < msg.data.length; i++) {
+            $('#messages').append($('<li>').text(msg.data[i]));
+          }
+        }
+      });
+
+      socket.on('message', function(msg) {
+        $('#messages').append($('<li>').text(msg));
+      });
+    });
+  </script>
 </body>
 </html>
